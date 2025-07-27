@@ -13,23 +13,28 @@ class ProductDetailScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Product Detail')),
       body: productAsync.when(
-        data: (product) => Padding(
+        data: (product) => SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(product.imageUrl, height: 200),
-              const SizedBox(height: 8),
-              Text(product.name, style: Theme.of(context).textTheme.titleLarge),
-              Text('\$'+product.price.toStringAsFixed(2)),
-              const SizedBox(height: 8),
+              Center(
+                child: Image.network(product.imageUrl, height: 250),
+              ),
+              const SizedBox(height: 16),
+              Text(product.name, style: Theme.of(context).textTheme.headlineSmall),
+              Text('\$' + product.price.toStringAsFixed(2), style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 16),
               Text(product.description),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  ref.read(cartProvider.notifier).add(product);
-                },
-                child: const Text('Add to Cart'),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    ref.read(cartProvider.notifier).add(product);
+                  },
+                  child: const Text('Add to Cart'),
+                ),
               ),
             ],
           ),

@@ -22,6 +22,12 @@ class ProductListNotifier extends StateNotifier<AsyncValue<List<Product>>> {
       state = AsyncValue.data(value.where((p) => p.id != id).toList());
     }
   }
+
+  void add(Product product) {
+    if (state case AsyncData(:final value)) {
+      state = AsyncValue.data([...value, product]);
+    }
+  }
 }
 
 final productListProvider = StateNotifierProvider<ProductListNotifier, AsyncValue<List<Product>>>((ref) {
