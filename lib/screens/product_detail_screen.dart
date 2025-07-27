@@ -20,7 +20,7 @@ class ProductDetailScreen extends ConsumerWidget {
             children: [
               Image.network(product.imageUrl, height: 200),
               const SizedBox(height: 8),
-              Text(product.name, style: Theme.of(context).textTheme.headline6),
+              Text(product.name, style: Theme.of(context).textTheme.titleLarge),
               Text('\$'+product.price.toStringAsFixed(2)),
               const SizedBox(height: 8),
               Text(product.description),
