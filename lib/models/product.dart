@@ -5,12 +5,19 @@ class Product {
   final double price;
   final String description;
 
-  Product({required this.id, required this.name, required this.imageUrl, required this.price, required this.description});
+  Product({
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+    required this.price,
+    required this.description,
+  });
 
+  /// Parses a product returned from the Fake Store API.
   factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json['id'].toString(),
-        name: json['name'],
-        imageUrl: json['imageUrl'],
+        name: json['title'] ?? json['name'],
+        imageUrl: json['image'] ?? json['imageUrl'],
         price: (json['price'] as num).toDouble(),
         description: json['description'] ?? '',
       );
