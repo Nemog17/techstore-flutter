@@ -10,17 +10,31 @@ class ApiService {
 
   Future<List<Product>> fetchProducts() async {
     final res = await _client.get(Uri.parse(productBaseUrl));
-    final data = jsonDecode(res.body) as List;
+    if (res.statusCode != 200) {
+      throw Exception('Failed to fetch products: ${res.statusCode}');
+    }
+    final data = jsonDecode(res.body);
+    if (data is! List) {
+      throw const FormatException('Unexpected response format');
+    }
     return data.map((e) => Product.fromJson(e)).toList();
   }
 
   Future<Product> fetchProduct(String id) async {
     final res = await _client.get(Uri.parse('$productBaseUrl/$id'));
-    return Product.fromJson(jsonDecode(res.body));
+    if (res.statusCode != 200) {
+      throw Exception('Failed to fetch product: ${res.statusCode}');
+    }
+    final data = jsonDecode(res.body);
+    if (data is! Map<String, dynamic>) {
+      throw const FormatException('Unexpected response format');
+    }
+    return Product.fromJson(data);
   }
 
   Future<bool> pay(double amount) async {
-    final res = await _client.post(Uri.parse(paymentBaseUrl), body: {'amount': amount.toString()});
+    final res = await _client
+        .post(Uri.parse(paymentBaseUrl), body: {'amount': amount.toString()});
     return res.statusCode == 200;
   }
 }
