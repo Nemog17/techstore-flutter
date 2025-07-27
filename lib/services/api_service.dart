@@ -5,25 +5,35 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ApiService {
   final http.Client _client = http.Client();
-  // Base URL for products from the DummyJSON API
-  final String productBaseUrl = 'https://dummyjson.com/products';
+  // Base URL for products from the Fake Store API
+  final String productBaseUrl = 'https://fakestoreapi.com/products';
   // Stripe payment endpoint
   final String paymentBaseUrl = 'https://api.stripe.com/v1/payment_intents';
 
   Future<List<Product>> fetchProducts() async {
-    final res = await _client.get(Uri.parse('$productBaseUrl?limit=100'));
+    final url = Uri.parse('$productBaseUrl/category/electronics');
+    final res = await _client.get(url);
     if (res.statusCode != 200) {
       throw Exception('Failed to fetch products: ${res.statusCode}');
     }
     final data = jsonDecode(res.body);
-    if (data is Map && data['products'] is List) {
-      return (data['products'] as List)
-          .map((e) => Product.fromJson(e))
-          .toList();
-    } else if (data is List) {
-      return data.map((e) => Product.fromJson(e)).toList();
+    List products;
+    if (data is List) {
+      products = data;
+    } else if (data is Map && data['products'] is List) {
+      products = data['products'];
+    } else {
+      throw const FormatException('Unexpected response format');
     }
-    throw const FormatException('Unexpected response format');
+
+    final items = products.map((e) => Product.fromJson(e)).toList();
+
+    // Repeat the list until we have at least 100 items
+    while (items.length < 100) {
+      items.addAll(List<Product>.from(items));
+    }
+
+    return items.take(100).toList();
   }
 
   Future<Product> fetchProduct(String id) async {
