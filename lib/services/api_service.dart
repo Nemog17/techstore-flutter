@@ -5,24 +5,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ApiService {
   final http.Client _client = http.Client();
-  // Base URL for products from the Fake Store API
-  final String productBaseUrl = 'https://fakestoreapi.com/products';
-  // Endpoint scoped to the electronics category
-  final String electronicsUrl =
-      'https://fakestoreapi.com/products/category/electronics';
+  // Base URL for products from the DummyJSON API
+  final String productBaseUrl = 'https://dummyjson.com/products';
   // Stripe payment endpoint
   final String paymentBaseUrl = 'https://api.stripe.com/v1/payment_intents';
 
   Future<List<Product>> fetchProducts() async {
-    final res = await _client.get(Uri.parse(electronicsUrl));
+    final res = await _client.get(Uri.parse('$productBaseUrl?limit=100'));
     if (res.statusCode != 200) {
       throw Exception('Failed to fetch products: ${res.statusCode}');
     }
     final data = jsonDecode(res.body);
-    if (data is! List) {
-      throw const FormatException('Unexpected response format');
+    if (data is Map && data['products'] is List) {
+      return (data['products'] as List)
+          .map((e) => Product.fromJson(e))
+          .toList();
+    } else if (data is List) {
+      return data.map((e) => Product.fromJson(e)).toList();
     }
-    return data.map((e) => Product.fromJson(e)).toList();
+    throw const FormatException('Unexpected response format');
   }
 
   Future<Product> fetchProduct(String id) async {

@@ -13,12 +13,24 @@ class Product {
     required this.description,
   });
 
-  /// Parses a product returned from the Fake Store API.
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json['id'].toString(),
-        name: json['title'] ?? json['name'],
-        imageUrl: json['image'] ?? json['imageUrl'],
-        price: (json['price'] as num).toDouble(),
-        description: json['description'] ?? '',
-      );
+  /// Parses a product returned from the API. Supports both Fake Store and
+  /// DummyJSON formats.
+  factory Product.fromJson(Map<String, dynamic> json) {
+    String image = '';
+    if (json['image'] != null) {
+      image = json['image'];
+    } else if (json['thumbnail'] != null) {
+      image = json['thumbnail'];
+    } else if (json['images'] is List && (json['images'] as List).isNotEmpty) {
+      image = json['images'][0];
+    }
+
+    return Product(
+      id: json['id'].toString(),
+      name: json['title'] ?? json['name'],
+      imageUrl: image,
+      price: (json['price'] as num).toDouble(),
+      description: json['description'] ?? '',
+    );
+  }
 }
