@@ -26,9 +26,11 @@ class TechStoreApp extends ConsumerWidget {
       GoRoute(path: '/admin', builder: (_, __) => const AdminPanel()),
     ],
     redirect: (context, state) {
-      final isLoggedIn = context.read(authProvider).isLoggedIn;
-      final isAdmin = context.read(authProvider).isAdmin;
-      if (state.subloc == '/admin' && (!isLoggedIn || !isAdmin)) {
+      final container = ProviderScope.containerOf(context, listen: false);
+      final auth = container.read(authProvider);
+      final isLoggedIn = auth.isLoggedIn;
+      final isAdmin = auth.isAdmin;
+      if (state.uri.path == '/admin' && (!isLoggedIn || !isAdmin)) {
         return '/';
       }
       return null;
