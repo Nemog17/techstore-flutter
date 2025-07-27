@@ -1,0 +1,21 @@
+name: techstore
+description: A Flutter e-commerce app for computer components.
+publish_to: 'none'
+version: 0.1.0
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  go_router: ^13.0.1
+  flutter_riverpod: ^2.4.0
+  http: ^1.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
