@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/product_provider.dart';
+import '../../models/product.dart';
 
 class AdminPanel extends ConsumerWidget {
   const AdminPanel({super.key});
@@ -30,8 +31,54 @@ class AdminPanel extends ConsumerWidget {
         error: (e, st) => Center(child: Text('Error: '+e.toString())),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: add product creation flow
+        onPressed: () async {
+          final nameController = TextEditingController();
+          final priceController = TextEditingController();
+          final imageController = TextEditingController();
+          await showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: const Text('Add Product'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(labelText: 'Name'),
+                  ),
+                  TextField(
+                    controller: priceController,
+                    decoration: const InputDecoration(labelText: 'Price'),
+                    keyboardType: TextInputType.number,
+                  ),
+                  TextField(
+                    controller: imageController,
+                    decoration: const InputDecoration(labelText: 'Image URL'),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final product = Product(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      name: nameController.text,
+                      imageUrl: imageController.text,
+                      price: double.tryParse(priceController.text) ?? 0,
+                      description: '',
+                    );
+                    ref.read(productListProvider.notifier).add(product);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Add'),
+                ),
+              ],
+            ),
+          );
         },
         child: const Icon(Icons.add),
       ),

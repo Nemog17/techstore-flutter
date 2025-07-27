@@ -25,6 +25,10 @@ class LoginScreen extends ConsumerWidget {
               },
               child: const Text('Login'),
             ),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/register'),
+              child: const Text('Create an account'),
+            ),
           ],
         ),
       ),
