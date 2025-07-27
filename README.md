@@ -8,6 +8,7 @@ This repository contains a simplified Flutter application that demonstrates the 
 - **Riverpod** for state management
 - Basic authentication distinguishing normal users and admins
 - API integration with the [Fake Store API](https://fakestoreapi.com)
+- Product catalog limited to the `electronics` category for relevancy
 - Payment processing using the [Stripe API](https://stripe.com/docs/api)
 - Separate screens for catalog, product details, cart, payment and administration
 

@@ -7,11 +7,14 @@ class ApiService {
   final http.Client _client = http.Client();
   // Base URL for products from the Fake Store API
   final String productBaseUrl = 'https://fakestoreapi.com/products';
+  // Endpoint scoped to the electronics category
+  final String electronicsUrl =
+      'https://fakestoreapi.com/products/category/electronics';
   // Stripe payment endpoint
   final String paymentBaseUrl = 'https://api.stripe.com/v1/payment_intents';
 
   Future<List<Product>> fetchProducts() async {
-    final res = await _client.get(Uri.parse(productBaseUrl));
+    final res = await _client.get(Uri.parse(electronicsUrl));
     if (res.statusCode != 200) {
       throw Exception('Failed to fetch products: ${res.statusCode}');
     }
